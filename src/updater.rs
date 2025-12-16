@@ -36,12 +36,12 @@ pub async fn download_assets() -> Option<()> {
     };
 
     // Get the latest release manifest from GitHub. If it fails, try the fallback.
-    println!("[Vencord Launcher] Checking for updates...");
+    println!("[Equicord Launcher] Checking for updates...");
     let mut response = ureq::get(constants::RELEASE_URL).call().ok()?;
-    if response.status() != 200 {
-        println!("[Vencord Launcher] GitHub ratelimited... Trying fallback...");
-        response = ureq::get(constants::RELEASE_URL_FALLBACK).call().ok()?;
-    }
+    // if response.status() != 200 {
+    //    println!("[Vencord Launcher] GitHub ratelimited... Trying fallback...");
+    //    response = ureq::get(constants::RELEASE_URL_FALLBACK).call().ok()?;
+    // }
     let body = response.body_mut().read_to_string().ok()?;
 
     let json: JsonValue = body.parse().ok()?;
@@ -57,7 +57,7 @@ pub async fn download_assets() -> Option<()> {
         }
     }
 
-    println!("[Vencord Launcher] An update is available... Downloading...");
+    println!("[Equicord Launcher] An update is available... Downloading...");
 
     // Loop over the assets and find the ones we want.
     let assets: &Vec<_> = object.get("assets")?.get()?;
