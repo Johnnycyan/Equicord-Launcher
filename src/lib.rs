@@ -84,7 +84,7 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
         .with_id(instance_id)
         .with_mod_entrypoint(&mod_entrypoint)
         .with_template(include_str!("./require.js"))
-        .with_wm_class(&format!("vencord-{branch_name}"))
+        .with_wm_class(&format!("equicord-{branch_name}"))
         .create()
         .unwrap();
 
@@ -114,3 +114,4 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
         }
     }
 }
+
