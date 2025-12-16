@@ -38,7 +38,7 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
     let Some(discord_dir) = discord::get_discord(branch) else {
         let title = format!("No {display_name} installation found!");
         let message = format!(
-            "Vencord couldn't find your Discord installation.\n\
+            "Equicord couldn't find your Discord installation.\n\
 			Try reinstalling {display_name} and try again."
         );
 
@@ -114,4 +114,5 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
         }
     }
 }
+
 
