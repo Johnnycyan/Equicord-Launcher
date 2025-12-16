@@ -17,7 +17,7 @@ fn main() -> io::Result<()> {
         let nsis_dir = installers_dir.join("NSIS");
 
         // Try common NSIS installation paths, then fall back to PATH
-        let nsis_paths = [
+        let nsis_paths: &[&str] = &[
             r"C:\Program Files (x86)\NSIS\makensis.exe",
             r"C:\Program Files\NSIS\makensis.exe",
             "makensis.exe", // Fall back to PATH
@@ -25,9 +25,9 @@ fn main() -> io::Result<()> {
 
         let makensis = nsis_paths
             .iter()
-            .find(|path| {
-                if *path == "makensis.exe" {
-                    // For PATH lookup, try to run it
+            .find(|&path| {
+                if path == "makensis.exe" {
+                    // For PATH lookup, always try it as last resort
                     true
                 } else {
                     std::path::Path::new(path).exists()
