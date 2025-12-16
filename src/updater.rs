@@ -39,7 +39,7 @@ pub async fn download_assets() -> Option<()> {
     println!("[Equicord Launcher] Checking for updates...");
     let mut response = ureq::get(constants::RELEASE_URL).call().ok()?;
     // if response.status() != 200 {
-    //    println!("[Vencord Launcher] GitHub ratelimited... Trying fallback...");
+    //    println!("[Equicord Launcher] GitHub ratelimited... Trying fallback...");
     //    response = ureq::get(constants::RELEASE_URL_FALLBACK).call().ok()?;
     // }
     let body = response.body_mut().read_to_string().ok()?;

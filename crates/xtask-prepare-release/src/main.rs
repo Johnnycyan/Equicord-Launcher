@@ -24,11 +24,11 @@ fn main() -> io::Result<()> {
         std::fs::create_dir_all(workspace_root.join("target").join("dist"))?;
 
         std::fs::copy(
-            nsis_dir.join("Vencord Installer.exe"),
+            nsis_dir.join("Equicord Installer.exe"),
             workspace_root
                 .join("target")
                 .join("release")
-                .join("Vencord Installer.exe"),
+                .join("Equicord Installer.exe"),
         )?;
     }
 

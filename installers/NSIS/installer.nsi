@@ -16,16 +16,16 @@
 
 	;Name and file
 	Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-	OutFile "Vencord Installer.exe"
+	OutFile "Equicord Installer.exe"
 	Icon "${ASSETS_ROOT}\icon.ico"
 	Unicode True
-	BrandingText "Vencord Installer"
+	BrandingText "Equicord Installer"
 
 	;Default installation folder
-	InstallDir "$LOCALAPPDATA\VencordLauncher"
+	InstallDir "$LOCALAPPDATA\EquicordLauncher"
 
 	;Get installation folder from registry if available
-	InstallDirRegKey HKCU "Software\Vencord Launcher" ""
+	InstallDirRegKey HKCU "Software\Equicord Launcher" ""
 
 	ShowInstDetails show
 	ShowUnInstDetails show
@@ -43,9 +43,9 @@
 	!define MUI_UI_HEADERIMAGE_RIGHT "${ASSETS_ROOT}\icon.bmp"
 
 	!define MUI_WELCOMEFINISHPAGE_BITMAP "${ASSETS_ROOT}\welcome.bmp"
-	!define MUI_WELCOMEPAGE_TEXT "Welcome to the Vencord Installer.$\n\
+	!define MUI_WELCOMEPAGE_TEXT "Welcome to the Equicord Installer.$\n\
 	$\n\
-	On the next screen, you will be able to pick which versions of Vencord for Discord you would like to install."
+	On the next screen, you will be able to pick which versions of Equicord for Discord you would like to install."
 
 	!define MUI_COMPONENTSPAGE_SMALLDESC
 
@@ -149,9 +149,9 @@ FunctionEnd
 ;Descriptions
 
 	;Language strings
-	LangString DESC_InstallStable ${LANG_ENGLISH} "Install Vencord for Discord Stable"
-	LangString DESC_InstallPTB ${LANG_ENGLISH} "Install Vencord for Discord PTB"
-	LangString DESC_InstallCanary ${LANG_ENGLISH} "Install Vencord for Discord Canary"
+	LangString DESC_InstallStable ${LANG_ENGLISH} "Install Equicord for Discord Stable"
+	LangString DESC_InstallPTB ${LANG_ENGLISH} "Install Equicord for Discord PTB"
+	LangString DESC_InstallCanary ${LANG_ENGLISH} "Install Equicord for Discord Canary"
 
 	;Assign language strings to sections
 	!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
@@ -161,9 +161,9 @@ FunctionEnd
 	!insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 
-	LangString DESC_UninstallStable ${LANG_ENGLISH} "Uninstall Vencord for Discord Stable"
-	LangString DESC_UninstallPTB ${LANG_ENGLISH} "Uninstall Vencord for Discord PTB"
-	LangString DESC_UninstallCanary ${LANG_ENGLISH} "Uninstall Vencord for Discord Canary"
+	LangString DESC_UninstallStable ${LANG_ENGLISH} "Uninstall Equicord for Discord Stable"
+	LangString DESC_UninstallPTB ${LANG_ENGLISH} "Uninstall Equicord for Discord PTB"
+	LangString DESC_UninstallCanary ${LANG_ENGLISH} "Uninstall Equicord for Discord Canary"
 
 	!insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN
 		!insertmacro MUI_DESCRIPTION_TEXT ${UninstallStable} $(DESC_UninstallStable)
@@ -195,7 +195,7 @@ Function ${un}CheckRunningDiscord
 	IntOp $0 $0 | $1
 	IntOp $0 $0 | $2
 	${If} $0 == 0
-		MessageBox MB_OK|MB_ICONEXCLAMATION "Please select at least one version of Vencord for Discord to install."
+		MessageBox MB_OK|MB_ICONEXCLAMATION "Please select at least one version of Equicord for Discord to install."
 		Abort
 	${EndIf}
 

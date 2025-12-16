@@ -2,14 +2,14 @@
 members = ["crates/*"]
 
 [package]
-name = "vencord-launcher"
-description = "An easy-to-use launcher for Vencord"
+name = "equicord-launcher"
+description = "An easy-to-use launcher for Equicord"
 authors = ["Rie Takahashi <megumin@megu.dev>"]
 version = "0.1.11"
 license = "GPL-3.0"
-homepage = "https://github.com/meguminsama/vencord-launcher"
-repository = "https://github.com/meguminsama/vencord-launcher"
-keywords = ["vencord", "discord", "modding", "electron", "injector"]
+homepage = "https://github.com/Johnnycyan/Equicord-Launcher"
+repository = "https://github.com/Johnnycyan/Equicord-Launcher"
+keywords = ["equicord", "discord", "modding", "electron", "injector"]
 edition = "2021"
 
 [dependencies]
@@ -32,20 +32,20 @@ winapi = { version = "0.3.9", default-features = false, features = [
 dialog = "0.3.0"
 
 [lib]
-name = "vencord_launcher"
+name = "equicord_launcher"
 path = "src/lib.rs"
 crate-type = ["cdylib", "rlib"]
 
 [[bin]]
-name = "vencord-stable"
+name = "equicord-stable"
 path = "src/bin/stable.rs"
 
 [[bin]]
-name = "vencord-ptb"
+name = "equicord-ptb"
 path = "src/bin/ptb.rs"
 
 [[bin]]
-name = "vencord-canary"
+name = "equicord-canary"
 path = "src/bin/canary.rs"
 
 [build-dependencies]

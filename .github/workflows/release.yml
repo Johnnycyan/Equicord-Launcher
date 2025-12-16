@@ -44,10 +44,10 @@ jobs:
       - name: Package Linux artifacts
         run: |
           mkdir -p artifacts/linux
-          cp target/release/vencord-stable artifacts/linux/
-          cp target/release/vencord-ptb artifacts/linux/
-          cp target/release/vencord-canary artifacts/linux/
-          cp target/release/libvencord_launcher.so artifacts/linux/
+          cp target/release/equicord-stable artifacts/linux/
+          cp target/release/equicord-ptb artifacts/linux/
+          cp target/release/equicord-canary artifacts/linux/
+          cp target/release/libequicord_launcher.so artifacts/linux/
           cp installers/linux-sh/install.sh artifacts/linux/
           mkdir -p artifacts/linux/icons
           cp installers/assets/icon-*.png artifacts/linux/icons/
@@ -56,11 +56,11 @@ jobs:
         run: |
           cd artifacts/linux
 
-          tar -czf VencordStable-${{ github.ref_name }}.tar.gz vencord-stable libvencord_launcher.so icons
-          tar -czf VencordPTB-${{ github.ref_name }}.tar.gz vencord-ptb libvencord_launcher.so icons
-          tar -czf VencordCanary-${{ github.ref_name }}.tar.gz vencord-canary libvencord_launcher.so icons
+          tar -czf EquicordStable-${{ github.ref_name }}.tar.gz equicord-stable libequicord_launcher.so icons
+          tar -czf EquicordPTB-${{ github.ref_name }}.tar.gz equicord-ptb libequicord_launcher.so icons
+          tar -czf EquicordCanary-${{ github.ref_name }}.tar.gz equicord-canary libequicord_launcher.so icons
 
-          rm -r vencord-stable vencord-ptb vencord-canary libvencord_launcher.so icons
+          rm -r equicord-stable equicord-ptb equicord-canary libequicord_launcher.so icons
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -115,7 +115,7 @@ jobs:
       - name: Package Windows artifacts
         run: |
           mkdir -p artifacts/windows
-          cp "target/release/Vencord Installer.exe" "artifacts/windows/VencordInstaller-${{ matrix.arch }}.exe"
+          cp "target/release/Equicord Installer.exe" "artifacts/windows/EquicordInstaller-${{ matrix.arch }}.exe"
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

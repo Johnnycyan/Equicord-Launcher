@@ -1,44 +1,44 @@
 Section /o "un.Stable" UninstallStable
 
-  Delete "$INSTDIR\Stable\Vencord.exe"
-  Delete "$INSTDIR\Stable\vencord_launcher.dll"
+  Delete "$INSTDIR\Stable\Equicord.exe"
+  Delete "$INSTDIR\Stable\equicord_launcher.dll"
   RMDir "$INSTDIR\Stable"
 
-  Delete "$SMPROGRAMS\Vencord\Vencord.lnk"
+  Delete "$SMPROGRAMS\Equicord\Equicord.lnk"
 
-  DeleteRegKey HKCU "Software\Vencord Launcher\Stable"
+  DeleteRegKey HKCU "Software\Equicord Launcher\Stable"
 
-	DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vencord"
+	DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord"
 
 SectionEnd
 
 
 Section /o "un.PTB" UninstallPTB
 
-  Delete "$INSTDIR\PTB\Vencord PTB.exe"
-  Delete "$INSTDIR\PTB\vencord_launcher.dll"
+  Delete "$INSTDIR\PTB\Equicord PTB.exe"
+  Delete "$INSTDIR\PTB\equicord_launcher.dll"
   RMDir "$INSTDIR\PTB"
 
-  Delete "$SMPROGRAMS\Vencord\Vencord PTB.lnk"
+  Delete "$SMPROGRAMS\Equicord\Equicord PTB.lnk"
 
-  DeleteRegKey HKCU "Software\Vencord Launcher\PTB"
+  DeleteRegKey HKCU "Software\Equicord Launcher\PTB"
 
-	DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vencord PTB"
+	DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord PTB"
 
 SectionEnd
 
 
 Section /o "un.Canary" UninstallCanary
 
-  Delete "$INSTDIR\Canary\Vencord Canary.exe"
-  Delete "$INSTDIR\Canary\vencord_launcher.dll"
+  Delete "$INSTDIR\Canary\Equicord Canary.exe"
+  Delete "$INSTDIR\Canary\equicord_launcher.dll"
   RMDir "$INSTDIR\Canary"
 
-  Delete "$SMPROGRAMS\Vencord\Vencord Canary.lnk"
+  Delete "$SMPROGRAMS\Equicord\Equicord Canary.lnk"
 
-  DeleteRegKey HKCU "Software\Vencord Launcher\Canary"
+  DeleteRegKey HKCU "Software\Equicord Launcher\Canary"
   
-	DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vencord Canary"
+	DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord Canary"
 
 SectionEnd
 
@@ -49,16 +49,16 @@ Function un.onUninstSuccess
   IfFileExists "$INSTDIR\Stable" EndFunc 0
 
   RMDir /r "$INSTDIR\cache"
-  Delete "$INSTDIR\Uninstall Vencord.exe"
+  Delete "$INSTDIR\Uninstall Equicord.exe"
   RMDir "$INSTDIR"
 
-  DeleteRegKey HKCU "Software\Vencord Launcher"
+  DeleteRegKey HKCU "Software\Equicord Launcher"
 
-  IfFileExists "$SMPROGRAMS\Vencord\Vencord.lnk" EndFunc 0
-  IfFileExists "$SMPROGRAMS\Vencord\Vencord PTB.lnk" EndFunc 0
-  IfFileExists "$SMPROGRAMS\Vencord\Vencord Canary.lnk" EndFunc 0
+  IfFileExists "$SMPROGRAMS\Equicord\Equicord.lnk" EndFunc 0
+  IfFileExists "$SMPROGRAMS\Equicord\Equicord PTB.lnk" EndFunc 0
+  IfFileExists "$SMPROGRAMS\Equicord\Equicord Canary.lnk" EndFunc 0
 
-  RMDir "$SMPROGRAMS\Vencord"
+  RMDir "$SMPROGRAMS\Equicord"
 
   EndFunc:
 FunctionEnd

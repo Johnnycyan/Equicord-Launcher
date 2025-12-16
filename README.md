@@ -1,10 +1,10 @@
-# Vencord Launcher
+# Equicord Launcher
 
-Quickly and conveniently launch Vencord.
+Quickly and conveniently launch Equicord.
 
 # Windows
 
-Download and run [the latest installer](https://github.com/MeguminSama/Vencord-Launcher/releases/latest/download/VencordInstaller.exe) and pick the branches of Discord you want.
+Download and run [the latest installer](https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/EquicordInstaller.exe) and pick the branches of Discord you want.
 
 # Linux
 
@@ -13,22 +13,22 @@ The Linux build also supports flatpak, and will use it if it cannot find another
 ## Stable
 
 ```
-sh -c "$(curl -fsSL https://github.com/MeguminSama/Vencord-Launcher/releases/latest/download/install.sh)"
+sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/install.sh)"
 ```
 
 ## PTB
 ```
-sh -c "$(curl -fsSL https://github.com/MeguminSama/Vencord-Launcher/releases/latest/download/install.sh)" -- ptb
+sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/install.sh)" -- ptb
 ```
 
 ## Canary
 ```
-sh -c "$(curl -fsSL https://github.com/MeguminSama/Vencord-Launcher/releases/latest/download/install.sh)" -- canary
+sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/install.sh)" -- canary
 ```
 
 ## Uninstalling
 ```
-sh -c "$(curl -fsSL https://github.com/MeguminSama/Vencord-Launcher/releases/latest/download/install.sh)" -- --uninstall <branch>
+sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/install.sh)" -- --uninstall <branch>
 ```
 
 # MacOS
@@ -43,7 +43,7 @@ Working on it...
 You can pass the `--local` flag with a path to the entrypoint. For example:
 
 ```
-vencord-stable --local $HOME/workspace/vencord/patcher.js
+equicord-stable --local $HOME/workspace/equicord/patcher.js
 ```
 
 ## Passing arguments through to discord?
@@ -51,5 +51,5 @@ vencord-stable --local $HOME/workspace/vencord/patcher.js
 Any arguments passed after `--` are passed through to Discord. For example:
 
 ```
-vencord-stable -- --start-minimized --enable-blink-features=MiddleClickAutoscroll
+equicord-stable -- --start-minimized --enable-blink-features=MiddleClickAutoscroll
 ```

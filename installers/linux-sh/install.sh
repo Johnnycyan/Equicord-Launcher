@@ -30,44 +30,44 @@ case "$BRANCH" in
         ;;
 esac
 
-GITHUB_ORG="MeguminSama"
-REPO_NAME="Vencord-Launcher"
+GITHUB_ORG="Johnnycyan"
+REPO_NAME="Equicord-Launcher"
 
 
 if [ "$ACTION" = "uninstall" ]; then
-    echo "Uninstalling Vencord $BRANCH..."
+    echo "Uninstalling Equicord $BRANCH..."
 
     # Remove the binary
-    $PRIV_ESC rm -f "/usr/bin/vencord-$BRANCH"
+    $PRIV_ESC rm -f "/usr/bin/equicord-$BRANCH"
 
     # Check if all three binaries are deleted
-    if [ ! -f "/usr/bin/vencord-stable" ] && \
-       [ ! -f "/usr/bin/vencord-canary" ] && \
-       [ ! -f "/usr/bin/vencord-ptb" ]; then
+    if [ ! -f "/usr/bin/equicord-stable" ] && \
+       [ ! -f "/usr/bin/equicord-canary" ] && \
+       [ ! -f "/usr/bin/equicord-ptb" ]; then
         # Remove the shared library if all binaries are gone
-        $PRIV_ESC rm -f "/usr/lib/libvencord_launcher.so"
+        $PRIV_ESC rm -f "/usr/lib/libequicord_launcher.so"
         $PRIV_ESC ldconfig /usr/lib
     fi
 
     # Remove icons
     HICOLOR="/usr/share/icons/hicolor"
-    $PRIV_ESC rm -f "$HICOLOR/16x16/apps/vencord-$BRANCH.png"
-    $PRIV_ESC rm -f "$HICOLOR/32x32/apps/vencord-$BRANCH.png"
-    $PRIV_ESC rm -f "$HICOLOR/48x48/apps/vencord-$BRANCH.png"
-    $PRIV_ESC rm -f "$HICOLOR/64x64/apps/vencord-$BRANCH.png"
-    $PRIV_ESC rm -f "$HICOLOR/128x128/apps/vencord-$BRANCH.png"
-    $PRIV_ESC rm -f "$HICOLOR/256x256/apps/vencord-$BRANCH.png"
-    $PRIV_ESC rm -f "$HICOLOR/512x512/apps/vencord-$BRANCH.png"
-    $PRIV_ESC rm -f "$HICOLOR/1024x1024/apps/vencord-$BRANCH.png"
+    $PRIV_ESC rm -f "$HICOLOR/16x16/apps/equicord-$BRANCH.png"
+    $PRIV_ESC rm -f "$HICOLOR/32x32/apps/equicord-$BRANCH.png"
+    $PRIV_ESC rm -f "$HICOLOR/48x48/apps/equicord-$BRANCH.png"
+    $PRIV_ESC rm -f "$HICOLOR/64x64/apps/equicord-$BRANCH.png"
+    $PRIV_ESC rm -f "$HICOLOR/128x128/apps/equicord-$BRANCH.png"
+    $PRIV_ESC rm -f "$HICOLOR/256x256/apps/equicord-$BRANCH.png"
+    $PRIV_ESC rm -f "$HICOLOR/512x512/apps/equicord-$BRANCH.png"
+    $PRIV_ESC rm -f "$HICOLOR/1024x1024/apps/equicord-$BRANCH.png"
 
     # Update icon cache
     $PRIV_ESC gtk-update-icon-cache /usr/share/icons/hicolor/ || true
 
     # Remove desktop entry
     if [ "$BRANCH" = "stable" ]; then
-        DESKTOP_ENTRY_FILENAME="vencord.desktop"
+        DESKTOP_ENTRY_FILENAME="equicord.desktop"
     else
-        DESKTOP_ENTRY_FILENAME="vencord-$BRANCH.desktop"
+        DESKTOP_ENTRY_FILENAME="equicord-$BRANCH.desktop"
     fi
 
     $PRIV_ESC rm -f "/usr/share/applications/$DESKTOP_ENTRY_FILENAME"
@@ -79,10 +79,10 @@ fi
 # Convert BRANCH to uppercase or capitalize as needed
 if [ "$BRANCH" = "ptb" ]; then
     BRANCH_UPPER="PTB"
-    ASSET_NAME="VencordPTB-"
+    ASSET_NAME="EquicordPTB-"
 else
     BRANCH_UPPER=$(echo "$BRANCH" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
-    ASSET_NAME="Vencord${BRANCH_UPPER}-"
+    ASSET_NAME="Equicord${BRANCH_UPPER}-"
 fi
 
 LATEST_RELEASE=$(curl -s "https://api.github.com/repos/$GITHUB_ORG/$REPO_NAME/releases/latest")
@@ -96,7 +96,7 @@ fi
 
 ASSET_FILENAME="${ASSET_NAME}${VERSION}.tar.gz"
 
-echo "Downloading Vencord $BRANCH $VERSION ($ASSET_FILENAME) from GitHub..."
+echo "Downloading Equicord $BRANCH $VERSION ($ASSET_FILENAME) from GitHub..."
 
 DOWNLOAD_URL=$(echo "$LATEST_RELEASE" | grep "browser_download_url" | grep "$ASSET_FILENAME" | cut -d '"' -f 4)
 
@@ -126,39 +126,39 @@ else
     exit 1
 fi
 
-echo "Installing Vencord $BRANCH $VERSION..."
+echo "Installing Equicord $BRANCH $VERSION..."
 
-$PRIV_ESC install -Dm 755 "$TEMP_DIR/vencord-$BRANCH" /usr/bin/
+$PRIV_ESC install -Dm 755 "$TEMP_DIR/equicord-$BRANCH" /usr/bin/
 
-OTHER_BRANCHES=$(ls /usr/bin | grep 'vencord-' | grep -v "vencord-$BRANCH")
+OTHER_BRANCHES=$(ls /usr/bin | grep 'equicord-' | grep -v "equicord-$BRANCH")
 
 if [ -n "$OTHER_BRANCHES" ]; then
     # TODO: Maybe add a version flag to check if the other branches are outdated?
-    echo "Warning: The following Vencord branches are also installed. If they are outdated, consider updating them too:"
+    echo "Warning: The following Equicord branches are also installed. If they are outdated, consider updating them too:"
     echo "$OTHER_BRANCHES"
 fi
 
-$PRIV_ESC install -Dm 644 "$TEMP_DIR/libvencord_launcher.so" /usr/lib/
+$PRIV_ESC install -Dm 644 "$TEMP_DIR/libequicord_launcher.so" /usr/lib/
 $PRIV_ESC ldconfig /usr/lib
 
 if [ "$BRANCH" = "stable" ]; then
-    DESKTOP_ENTRY_NAME="Vencord"
-    DESKTOP_ENTRY_FILENAME="vencord.desktop"
+    DESKTOP_ENTRY_NAME="Equicord"
+    DESKTOP_ENTRY_FILENAME="equicord.desktop"
 else
-    DESKTOP_ENTRY_NAME="Vencord $BRANCH_UPPER"
-    DESKTOP_ENTRY_FILENAME="vencord-$BRANCH.desktop"
+    DESKTOP_ENTRY_NAME="Equicord $BRANCH_UPPER"
+    DESKTOP_ENTRY_FILENAME="equicord-$BRANCH.desktop"
 fi
 
 HICOLOR="/usr/share/icons/hicolor"
 
-$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-16x16.png" "$HICOLOR/16x16/apps/vencord-$BRANCH.png"
-$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-32x32.png" "$HICOLOR/32x32/apps/vencord-$BRANCH.png"
-$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-48x48.png" "$HICOLOR/48x48/apps/vencord-$BRANCH.png"
-$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-64x64.png" "$HICOLOR/64x64/apps/vencord-$BRANCH.png"
-$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-128x128.png" "$HICOLOR/128x128/apps/vencord-$BRANCH.png"
-$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-256x256.png" "$HICOLOR/256x256/apps/vencord-$BRANCH.png"
-$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-512x512.png" "$HICOLOR/512x512/apps/vencord-$BRANCH.png"
-$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-1024x1024.png" "$HICOLOR/1024x1024/apps/vencord-$BRANCH.png"
+$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-16x16.png" "$HICOLOR/16x16/apps/equicord-$BRANCH.png"
+$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-32x32.png" "$HICOLOR/32x32/apps/equicord-$BRANCH.png"
+$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-48x48.png" "$HICOLOR/48x48/apps/equicord-$BRANCH.png"
+$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-64x64.png" "$HICOLOR/64x64/apps/equicord-$BRANCH.png"
+$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-128x128.png" "$HICOLOR/128x128/apps/equicord-$BRANCH.png"
+$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-256x256.png" "$HICOLOR/256x256/apps/equicord-$BRANCH.png"
+$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-512x512.png" "$HICOLOR/512x512/apps/equicord-$BRANCH.png"
+$PRIV_ESC install -Dm644 "$TEMP_DIR/icons/icon-1024x1024.png" "$HICOLOR/1024x1024/apps/equicord-$BRANCH.png"
 
 $PRIV_ESC gtk-update-icon-cache /usr/share/icons/hicolor/ || true
 
@@ -166,12 +166,12 @@ DESKTOP_ENTRY="[Desktop Entry]
 Name=$DESKTOP_ENTRY_NAME
 Comment=$DESKTOP_ENTRY_NAME Launcher
 GenericName=Internet Messenger
-Exec=/usr/bin/vencord-$BRANCH
-Icon=vencord-$BRANCH
+Exec=/usr/bin/equicord-$BRANCH
+Icon=equicord-$BRANCH
 Terminal=false
 Type=Application
 Categories=Network;InstantMessaging;
-StartupWMClass=vencord-$BRANCH"
+StartupWMClass=equicord-$BRANCH"
 
 echo "$DESKTOP_ENTRY" | $PRIV_ESC tee "/usr/share/applications/$DESKTOP_ENTRY_FILENAME" > /dev/null
 

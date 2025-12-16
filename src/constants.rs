@@ -1,12 +1,12 @@
 #[cfg(windows)]
-pub static LIBRARY: &str = "vencord_launcher.dll";
+pub static LIBRARY: &str = "equicord_launcher.dll";
 
 #[cfg(not(windows))]
-pub static LIBRARY: &str = "libvencord_launcher.so";
+pub static LIBRARY: &str = "libequicord_launcher.so";
 
 pub static MOD_ENTRYPOINT: &str = "patcher.js";
 pub static RELEASE_URL: &str = "https://api.github.com/repos/Equicord/Equicord/releases/latest";
-// pub static RELEASE_URL_FALLBACK: &str = "https://vencord.dev/releases/vencord";
+// pub static RELEASE_URL_FALLBACK: &str = "https://equicord.dev/releases/equicord";
 pub static RELEASE_INFO_FILE: &str = "release.json";
 pub static RELEASE_ASSETS: &[&str] = &[
     // Patcher
@@ -56,7 +56,7 @@ pub fn get_library_path() -> String {
 pub fn asset_cache_dir() -> Option<std::path::PathBuf> {
     let local_appdata = dirs::data_local_dir()?;
 
-    let dir = local_appdata.join("VencordLauncher").join("cache");
+    let dir = local_appdata.join("EquicordLauncher").join("cache");
 
     if !dir.exists() {
         std::fs::create_dir_all(&dir).ok()?;
@@ -64,4 +64,3 @@ pub fn asset_cache_dir() -> Option<std::path::PathBuf> {
 
     Some(dir)
 }
-

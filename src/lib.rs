@@ -19,7 +19,7 @@ use discord::{DiscordBranch, DiscordPath};
 struct Args {
     /// To use a local instance of the mod, pass the path to the mod entrypoint.
     ///
-    /// e.g. `--local "C:\\Users\\megu\\vencord\\dist\\injector.js"`
+    /// e.g. `--local "C:\\Users\\megu\\equicord\\dist\\injector.js"`
     #[clap(short, long)]
     pub local: Option<String>,
 
