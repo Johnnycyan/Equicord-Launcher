@@ -51,14 +51,13 @@ jobs:
           cp installers/linux-sh/install.sh artifacts/
           mkdir -p artifacts/icons
           cp installers/assets/icon-*.png artifacts/icons/
-          cd artifacts
-          zip -r ../Linux.zip .
+          tar -czf Linux.tar.gz -C artifacts .
 
-      - name: Upload Linux zip
+      - name: Upload Linux archive
         uses: actions/upload-artifact@v4
         with:
           name: linux-artifacts
-          path: Linux.zip
+          path: Linux.tar.gz
 
       - name: Upload install.sh
         uses: actions/upload-artifact@v4
@@ -145,7 +144,7 @@ jobs:
       - name: Prepare release files
         run: |
           mkdir -p release
-          cp artifacts/linux-artifacts/Linux.zip release/
+          cp artifacts/linux-artifacts/Linux.tar.gz release/
           cp artifacts/install-script/install.sh release/
           cp artifacts/windows-x64-zip/Windows-x64.zip release/
           cp artifacts/windows-arm64-zip/Windows-arm64.zip release/
@@ -168,6 +167,6 @@ jobs:
           files: |
             release/EquicordInstaller.exe
             release/install.sh
-            release/Linux.zip
+            release/Linux.tar.gz
             release/Windows-arm64.zip
             release/Windows-x64.zip
