@@ -27,12 +27,16 @@ pub async fn download_assets() -> Option<()> {
 
         let tag_name: &String = object.get("tag_name")?.get()?;
         let name: &String = object.get("name")?.get()?;
-        let updated_at: &String = object.get("updated_at").and_then(|v| v.get()).unwrap_or(&String::new());
+        let updated_at: String = object
+            .get("updated_at")
+            .and_then(|v| v.get::<String>())
+            .cloned()
+            .unwrap_or_default();
 
         Some(GithubRelease {
             tag_name: tag_name.clone(),
             name: name.clone(),
-            updated_at: updated_at.clone(),
+            updated_at,
         })
     } else {
         None
