@@ -7,6 +7,7 @@ use crate::constants;
 struct GithubRelease {
     pub tag_name: String,
     pub name: String,
+    pub updated_at: String,
 }
 
 struct GithubReleaseAsset {
@@ -26,10 +27,12 @@ pub async fn download_assets() -> Option<()> {
 
         let tag_name: &String = object.get("tag_name")?.get()?;
         let name: &String = object.get("name")?.get()?;
+        let updated_at: &String = object.get("updated_at").and_then(|v| v.get()).unwrap_or(&String::new());
 
         Some(GithubRelease {
             tag_name: tag_name.clone(),
             name: name.clone(),
+            updated_at: updated_at.clone(),
         })
     } else {
         None
@@ -49,10 +52,12 @@ pub async fn download_assets() -> Option<()> {
 
     let tag_name: &String = object.get("tag_name")?.get()?;
     let name: &String = object.get("name")?.get()?;
+    let updated_at: &String = object.get("updated_at")?.get()?;
 
-    // If the latest release is the same as our current one, don't bother downloading.
+    // If the latest release has the same updated_at timestamp as our current one, don't bother downloading.
+    // We use updated_at instead of tag_name/name because Equicord uses a rolling "latest" tag.
     if let Some(release) = current_version {
-        if release.name == *name && release.tag_name == *tag_name {
+        if release.updated_at == *updated_at {
             return Some(());
         }
     }
@@ -103,7 +108,8 @@ pub async fn download_assets() -> Option<()> {
     let release_json = format!(
         "{{\n\
         	\"tag_name\": \"{tag_name}\",\n\
-        	\"name\": \"{name}\"\n\
+        	\"name\": \"{name}\",\n\
+        	\"updated_at\": \"{updated_at}\"\n\
 		}}"
     );
 
