@@ -13,11 +13,25 @@ if (process.env.MODLOADER_EXECUTABLE) {
       console.error("Failed to parse MODLOADER_PROCESS_ARGV", e);
     }
 
-		_relaunch.call(app, {
-			args,
-			execPath: process.env.MODLOADER_EXECUTABLE,
-		});
+    _relaunch.call(app, {
+      args,
+      execPath: process.env.MODLOADER_EXECUTABLE,
+    });
   };
 }
+
+const electron = require("electron");
+const originalHandle = electron.ipcMain.handle;
+electron.ipcMain.handle = (channel, handler) => {
+  try {
+    return originalHandle.call(electron.ipcMain, channel, handler);
+  } catch (error) {
+    if (error.message && error.message.includes("Attempted to register a second handler")) {
+      console.log(`[Equicord Launcher] Suppressed duplicate handler registration for '${channel}'`);
+      return;
+    }
+    throw error;
+  }
+};
 
 require(require("path").resolve(process.env.MODLOADER_MOD_ENTRYPOINT));
