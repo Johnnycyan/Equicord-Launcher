@@ -125,13 +125,31 @@ pub async fn download_assets() -> Option<()> {
 pub async fn download_open_asar() -> Option<()> {
     let assets_dir = constants::asset_cache_dir().unwrap();
     let open_asar_path = assets_dir.join(constants::OPEN_ASAR_FILENAME);
-    
-    // Simple check: if it exists, we skip for now (or we could check for updates similar to above)
-    // For now, let's just fetch it if it's missing to keep it simple as requested, 
-    // or we can implement a proper update check if the user wants it robust.
-    // Given the previous code does a robust check, let's try to be at least somewhat robust but maybe less strict on timestamps for now
-    // or just always check latest.
-    
+    let release_file = assets_dir.join(constants::OPEN_ASAR_RELEASE_INFO_FILE);
+
+    // Get the current open_asar_release.json if it exists.
+    let current_version = if release_file.exists() {
+        let data = std::fs::read_to_string(&release_file).ok()?;
+        let json: JsonValue = data.parse().ok()?;
+        let object: &HashMap<_, _> = json.get()?;
+
+        let tag_name: &String = object.get("tag_name")?.get()?;
+        let name: &String = object.get("name")?.get()?;
+        let updated_at: String = object
+            .get("updated_at")
+            .and_then(|v| v.get::<String>())
+            .cloned()
+            .unwrap_or_default();
+
+        Some(GithubRelease {
+            tag_name: tag_name.clone(),
+            name: name.clone(),
+            updated_at,
+        })
+    } else {
+        None
+    };
+
     println!("[Equicord Launcher] Checking for OpenAsar updates...");
     
     let response = ureq::get(constants::OPEN_ASAR_URL).call().ok()?;
@@ -139,6 +157,20 @@ pub async fn download_open_asar() -> Option<()> {
     
     let json: JsonValue = body.parse().ok()?;
     let object: &HashMap<_, _> = json.get()?;
+    
+    let tag_name: &String = object.get("tag_name")?.get()?;
+    let name: &String = object.get("name")?.get()?;
+    let updated_at: &String = object.get("updated_at")?.get()?;
+
+    // If the latest release has the same updated_at timestamp as our current one, don't bother downloading.
+    if let Some(release) = current_version {
+        // If file also exists (double check), then return
+        if release.updated_at == *updated_at && open_asar_path.exists() {
+            return Some(());
+        }
+    }
+
+    println!("[Equicord Launcher] OpenAsar update available... Downloading...");
     
     let assets: &Vec<_> = object.get("assets")?.get()?;
     // OpenAsar releases usually have "app.asar"
@@ -153,21 +185,20 @@ pub async fn download_open_asar() -> Option<()> {
         }
     })?;
 
-    // If we already have it, we might want to check size/hash, but for now let's just download it
-    // if we don't have it or if we want to ensure latest. 
-    // Optimizing: Check if file exists. If so, maybe skip for this pass unless we store version info.
-    // The user didn't ask for full version management for OpenAsar, just "ensure open asar is patched".
-    // I'll implement a simple "download if not exists" or "always download" might be too slow.
-    // Let's download if not exists for now.
-    
-    if open_asar_path.exists() {
-         return Some(());
-    }
-
-    println!("[Equicord Launcher] Downloading OpenAsar...");
     let mut response = ureq::get(&asset).call().ok()?;
     let body = response.body_mut().read_to_vec().ok()?;
     std::fs::write(&open_asar_path, body).ok()?;
     
+    // Write the new open_asar_release.json to disk.
+    let release_json = format!(
+        "{{\n\
+        	\"tag_name\": \"{tag_name}\",\n\
+        	\"name\": \"{name}\",\n\
+        	\"updated_at\": \"{updated_at}\"\n\
+		}}"
+    );
+
+    std::fs::write(&release_file, release_json).ok()?;
+
     Some(())
 }
