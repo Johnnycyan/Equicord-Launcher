@@ -152,7 +152,7 @@ pub async fn download_open_asar() -> Option<()> {
 
     println!("[Equicord Launcher] Checking for OpenAsar updates...");
     
-    let response = ureq::get(constants::OPEN_ASAR_URL).call().ok()?;
+    let mut response = ureq::get(constants::OPEN_ASAR_URL).call().ok()?;
     let body = response.body_mut().read_to_string().ok()?;
     
     let json: JsonValue = body.parse().ok()?;
