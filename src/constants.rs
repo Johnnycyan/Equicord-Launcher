@@ -6,6 +6,8 @@ pub static LIBRARY: &str = "libequicord_launcher.so";
 
 pub static MOD_ENTRYPOINT: &str = "patcher.js";
 pub static RELEASE_URL: &str = "https://api.github.com/repos/Equicord/Equicord/releases/latest";
+pub static OPEN_ASAR_URL: &str = "https://api.github.com/repos/GooseMod/OpenAsar/releases/latest";
+pub static OPEN_ASAR_FILENAME: &str = "app.asar";
 // pub static RELEASE_URL_FALLBACK: &str = "https://equicord.dev/releases/equicord";
 pub static RELEASE_INFO_FILE: &str = "release.json";
 pub static RELEASE_ASSETS: &[&str] = &[

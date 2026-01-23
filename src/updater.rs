@@ -121,3 +121,53 @@ pub async fn download_assets() -> Option<()> {
 
     Some(())
 }
+
+pub async fn download_open_asar() -> Option<()> {
+    let assets_dir = constants::asset_cache_dir().unwrap();
+    let open_asar_path = assets_dir.join(constants::OPEN_ASAR_FILENAME);
+    
+    // Simple check: if it exists, we skip for now (or we could check for updates similar to above)
+    // For now, let's just fetch it if it's missing to keep it simple as requested, 
+    // or we can implement a proper update check if the user wants it robust.
+    // Given the previous code does a robust check, let's try to be at least somewhat robust but maybe less strict on timestamps for now
+    // or just always check latest.
+    
+    println!("[Equicord Launcher] Checking for OpenAsar updates...");
+    
+    let response = ureq::get(constants::OPEN_ASAR_URL).call().ok()?;
+    let body = response.body_mut().read_to_string().ok()?;
+    
+    let json: JsonValue = body.parse().ok()?;
+    let object: &HashMap<_, _> = json.get()?;
+    
+    let assets: &Vec<_> = object.get("assets")?.get()?;
+    // OpenAsar releases usually have "app.asar"
+    let asset = assets.iter().find_map(|asset| {
+        let asset: &HashMap<_, _> = asset.get()?;
+        let name: &String = asset.get("name")?.get()?;
+        if name == "app.asar" {
+             let url: &String = asset.get("browser_download_url")?.get()?;
+             Some(url.clone())
+        } else {
+            None
+        }
+    })?;
+
+    // If we already have it, we might want to check size/hash, but for now let's just download it
+    // if we don't have it or if we want to ensure latest. 
+    // Optimizing: Check if file exists. If so, maybe skip for this pass unless we store version info.
+    // The user didn't ask for full version management for OpenAsar, just "ensure open asar is patched".
+    // I'll implement a simple "download if not exists" or "always download" might be too slow.
+    // Let's download if not exists for now.
+    
+    if open_asar_path.exists() {
+         return Some(());
+    }
+
+    println!("[Equicord Launcher] Downloading OpenAsar...");
+    let mut response = ureq::get(&asset).call().ok()?;
+    let body = response.body_mut().read_to_vec().ok()?;
+    std::fs::write(&open_asar_path, body).ok()?;
+    
+    Some(())
+}

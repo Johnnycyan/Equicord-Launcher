@@ -64,7 +64,9 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
     } else {
         // We can usually attempt to run Discord even if the downloads fail...
         // TODO: Make this more robust. Maybe specific error reasons so we can determine if it's safe to continue.
+        // TODO: Make this more robust. Maybe specific error reasons so we can determine if it's safe to continue.
         let _ = updater::download_assets().await;
+        let _ = updater::download_open_asar().await;
 
         assets_dir
             .join(constants::MOD_ENTRYPOINT)
@@ -91,8 +93,34 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
     let asar_path = asar.to_string_lossy().to_string();
 
     match discord_dir {
-        DiscordPath::Filesystem(discord_dir) => {
-            let discord_dir = discord_dir.to_string_lossy().to_string();
+        DiscordPath::Filesystem(discord_exe) => {
+            // Check if we have OpenAsar downloaded
+            let open_asar_source = constants::asset_cache_dir()
+                .unwrap()
+                .join(constants::OPEN_ASAR_FILENAME);
+
+            if open_asar_source.exists() {
+                if let Some(parent) = discord_exe.parent() {
+                    let resources_dir = parent.join("resources");
+                    let app_asar = resources_dir.join("app.asar");
+                    let backup_asar = resources_dir.join("_app.asar");
+
+                    // If backup doesn't exist, create it by renaming app.asar
+                    if !backup_asar.exists() && app_asar.exists() {
+                        println!("[Equicord Launcher] Backing up original app.asar...");
+                        let _ = std::fs::rename(&app_asar, &backup_asar);
+                    }
+
+                    // Copy OpenAsar to app.asar
+                    // We only do this if we successfully created a backup or if a backup already exists
+                    if backup_asar.exists() {
+                         println!("[Equicord Launcher] Patching OpenAsar...");
+                         let _ = std::fs::copy(&open_asar_source, &app_asar);
+                    }
+                }
+            }
+
+            let discord_dir = discord_exe.to_string_lossy().to_string();
 
             electron_hook::launch(
                 &discord_dir,
