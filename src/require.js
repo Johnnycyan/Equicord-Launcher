@@ -20,4 +20,4 @@ if (process.env.MODLOADER_EXECUTABLE) {
   };
 }
 
-require(process.env.MODLOADER_MOD_ENTRYPOINT);
+require(require("path").resolve(process.env.MODLOADER_MOD_ENTRYPOINT));
