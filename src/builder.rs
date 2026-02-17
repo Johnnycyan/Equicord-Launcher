@@ -7,6 +7,20 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+#[cfg(windows)]
+use std::os::windows::process::CommandExt;
+
+#[cfg(windows)]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
+/// Create a Command that won't open a visible console window on Windows.
+fn silent_cmd(program: &str) -> Command {
+    let mut cmd = Command::new(program);
+    #[cfg(windows)]
+    cmd.creation_flags(CREATE_NO_WINDOW);
+    cmd
+}
+
 use tinyjson::JsonValue;
 
 use crate::constants;
@@ -25,7 +39,7 @@ fn check_prerequisites() -> Result<(), String> {
     ];
 
     for (cmd, args) in &commands {
-        match Command::new(cmd).args(*args).output() {
+        match silent_cmd(cmd).args(*args).output() {
             Ok(output) if output.status.success() => {
                 let version = String::from_utf8_lossy(&output.stdout);
                 println!("[Equicord Launcher] Found {}: {}", cmd, version.trim());
@@ -58,7 +72,7 @@ fn clone_or_update_repo(repo_dir: &Path) -> Result<(), String> {
         println!("[Equicord Launcher] Updating Equicord repository...");
 
         // Fetch and reset to origin/main to handle force pushes on rolling releases
-        let fetch = Command::new("git")
+        let fetch = silent_cmd("git")
             .args(["fetch", "origin", "main"])
             .current_dir(repo_dir)
             .output()
@@ -69,7 +83,7 @@ fn clone_or_update_repo(repo_dir: &Path) -> Result<(), String> {
             return Err(format!("git fetch failed: {stderr}"));
         }
 
-        let reset = Command::new("git")
+        let reset = silent_cmd("git")
             .args(["reset", "--hard", "origin/main"])
             .current_dir(repo_dir)
             .output()
@@ -88,7 +102,7 @@ fn clone_or_update_repo(repo_dir: &Path) -> Result<(), String> {
                 .map_err(|e| format!("Failed to create directory: {e}"))?;
         }
 
-        let clone = Command::new("git")
+        let clone = silent_cmd("git")
             .args([
                 "clone",
                 "--depth",
@@ -112,7 +126,7 @@ fn clone_or_update_repo(repo_dir: &Path) -> Result<(), String> {
 
 /// Get the current HEAD commit hash.
 fn get_git_hash(repo_dir: &Path) -> Result<String, String> {
-    let output = Command::new("git")
+    let output = silent_cmd("git")
         .args(["rev-parse", "HEAD"])
         .current_dir(repo_dir)
         .output()
@@ -263,7 +277,7 @@ fn save_build_state(
 fn run_pnpm_install(repo_dir: &Path) -> Result<(), String> {
     println!("[Equicord Launcher] Running pnpm install...");
 
-    let output = Command::new("pnpm")
+    let output = silent_cmd("pnpm")
         .args(["install", "--frozen-lockfile"])
         .current_dir(repo_dir)
         .output()
@@ -285,7 +299,7 @@ fn run_pnpm_install(repo_dir: &Path) -> Result<(), String> {
 fn run_pnpm_build(repo_dir: &Path) -> Result<(), String> {
     println!("[Equicord Launcher] Running pnpm build...");
 
-    let output = Command::new("pnpm")
+    let output = silent_cmd("pnpm")
         .args(["build"])
         .current_dir(repo_dir)
         .output()
