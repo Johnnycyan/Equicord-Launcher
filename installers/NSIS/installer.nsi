@@ -8,6 +8,7 @@
 
 	!include "MUI2.nsh"
 	!include "FileFunc.nsh"
+	!include "LogicLib.nsh"
 	!include "headers.nsh"
 
 
@@ -152,12 +153,14 @@ FunctionEnd
 	LangString DESC_InstallStable ${LANG_ENGLISH} "Install Equicord for Discord Stable"
 	LangString DESC_InstallPTB ${LANG_ENGLISH} "Install Equicord for Discord PTB"
 	LangString DESC_InstallCanary ${LANG_ENGLISH} "Install Equicord for Discord Canary"
+	LangString DESC_StartMenuShortcuts ${LANG_ENGLISH} "Create Start Menu shortcuts for the selected versions"
 
 	;Assign language strings to sections
 	!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 		!insertmacro MUI_DESCRIPTION_TEXT ${InstallStable} $(DESC_InstallStable)
 		!insertmacro MUI_DESCRIPTION_TEXT ${InstallPTB} $(DESC_InstallPTB)
 		!insertmacro MUI_DESCRIPTION_TEXT ${InstallCanary} $(DESC_InstallCanary)
+		!insertmacro MUI_DESCRIPTION_TEXT ${StartMenuShortcuts} $(DESC_StartMenuShortcuts)
 	!insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 

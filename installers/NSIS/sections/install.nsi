@@ -1,3 +1,8 @@
+Section "Create Start Menu Shortcuts" StartMenuShortcuts
+	; This section is selected by default and acts as a flag.
+	; The actual shortcut creation is done in the individual install sections below.
+SectionEnd
+
 Section /o "Discord Stable" InstallStable
 
 	SetOutPath "$INSTDIR\Stable"
@@ -14,8 +19,14 @@ Section /o "Discord Stable" InstallStable
 	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord" "QuietUninstallString" "$\"$INSTDIR\Uninstall Equicord.exe$\" /Stable /S"
 	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord" "DisplayIcon" "$INSTDIR\Stable\Equicord.exe"
 
-	CreateDirectory "$SMPROGRAMS\Equicord"
-	CreateShortCut "$SMPROGRAMS\Equicord\Equicord.lnk" "$INSTDIR\Stable\Equicord.exe" "" "$INSTDIR\Stable\Equicord.exe"
+	; Only create shortcut if the Start Menu section is selected
+	SectionGetFlags ${StartMenuShortcuts} $0
+	${If} $0 & ${SF_SELECTED}
+		; Only create shortcut if it doesn't already exist
+		IfFileExists "$SMPROGRAMS\Equicord\Equicord.lnk" +3 0
+			CreateDirectory "$SMPROGRAMS\Equicord"
+			CreateShortCut "$SMPROGRAMS\Equicord\Equicord.lnk" "$INSTDIR\Stable\Equicord.exe" "" "$INSTDIR\Stable\Equicord.exe"
+	${EndIf}
 
 SectionEnd
 
@@ -36,8 +47,14 @@ Section /o "Discord PTB" InstallPTB
 	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord PTB" "QuietUninstallString" "$\"$INSTDIR\Uninstall Equicord.exe$\" /PTB /S"
 	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord PTB" "DisplayIcon" "$INSTDIR\PTB\Equicord PTB.exe"
 
-	CreateDirectory "$SMPROGRAMS\Equicord"
-	CreateShortCut "$SMPROGRAMS\Equicord\Equicord PTB.lnk" "$INSTDIR\PTB\Equicord PTB.exe" "" "$INSTDIR\PTB\Equicord PTB.exe"
+	; Only create shortcut if the Start Menu section is selected
+	SectionGetFlags ${StartMenuShortcuts} $0
+	${If} $0 & ${SF_SELECTED}
+		; Only create shortcut if it doesn't already exist
+		IfFileExists "$SMPROGRAMS\Equicord\Equicord PTB.lnk" +3 0
+			CreateDirectory "$SMPROGRAMS\Equicord"
+			CreateShortCut "$SMPROGRAMS\Equicord\Equicord PTB.lnk" "$INSTDIR\PTB\Equicord PTB.exe" "" "$INSTDIR\PTB\Equicord PTB.exe"
+	${EndIf}
 
 SectionEnd
 
@@ -58,15 +75,19 @@ Section /o "Discord Canary" InstallCanary
 	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord Canary" "QuietUninstallString" "$\"$INSTDIR\Uninstall Equicord.exe$\" /Canary /S"
 	WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\Equicord Canary" "DisplayIcon" "$INSTDIR\Canary\Equicord Canary.exe"
 
-	CreateDirectory "$SMPROGRAMS\Equicord"
-	CreateShortCut "$SMPROGRAMS\Equicord\Equicord Canary.lnk" "$INSTDIR\Canary\Equicord Canary.exe" "" "$INSTDIR\Canary\Equicord Canary.exe"
+	; Only create shortcut if the Start Menu section is selected
+	SectionGetFlags ${StartMenuShortcuts} $0
+	${If} $0 & ${SF_SELECTED}
+		; Only create shortcut if it doesn't already exist
+		IfFileExists "$SMPROGRAMS\Equicord\Equicord Canary.lnk" +3 0
+			CreateDirectory "$SMPROGRAMS\Equicord"
+			CreateShortCut "$SMPROGRAMS\Equicord\Equicord Canary.lnk" "$INSTDIR\Canary\Equicord Canary.exe" "" "$INSTDIR\Canary\Equicord Canary.exe"
+	${EndIf}
 
 SectionEnd
 
 Function .onInstSuccess
 
 	WriteUninstaller "$INSTDIR\Uninstall Equicord.exe"
-
-	CreateDirectory "$SMPROGRAMS\Equicord"
 
 FunctionEnd
