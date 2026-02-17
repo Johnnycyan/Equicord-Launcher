@@ -28,6 +28,21 @@ pub static RELEASE_ASSETS: &[&str] = &[
     "renderer.css.map",
 ];
 
+pub static EQUICORD_REPO_URL: &str = "https://github.com/Equicord/Equicord.git";
+pub static CUSTOM_BUILD_STATE_FILE: &str = "custom_build_state.json";
+
+/// Files produced by `pnpm build` in `dist/desktop/` that we copy to the asset cache.
+pub static BUILD_OUTPUT_FILES: &[&str] = &[
+    "patcher.js",
+    "patcher.js.map",
+    "preload.js",
+    "preload.js.map",
+    "renderer.js",
+    "renderer.js.map",
+    "renderer.css",
+    "renderer.css.map",
+];
+
 pub fn get_library_path() -> String {
     // Get the executable dir
     let executable_dir = std::env::current_exe().ok().and_then(|exe_path| {
@@ -65,5 +80,14 @@ pub fn asset_cache_dir() -> Option<std::path::PathBuf> {
         std::fs::create_dir_all(&dir).ok()?;
     }
 
+    Some(dir)
+}
+
+pub fn equicord_repo_dir() -> Option<std::path::PathBuf> {
+    let local_appdata = dirs::data_local_dir()?;
+
+    let dir = local_appdata.join("EquicordLauncher").join("equicord-repo");
+
+    // Don't create it here — the builder will clone into it
     Some(dir)
 }

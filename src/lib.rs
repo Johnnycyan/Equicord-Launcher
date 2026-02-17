@@ -1,6 +1,7 @@
 // For compiling the modloader DLL:
 pub use electron_hook::*;
 
+pub mod builder;
 pub mod constants;
 pub mod discord;
 pub mod updater;
@@ -8,6 +9,9 @@ pub mod updater;
 // Library for the binaries to use:
 #[cfg(windows)]
 pub mod windows;
+
+#[cfg(windows)]
+pub mod progress;
 
 #[cfg(windows)]
 pub use windows::*;
@@ -22,6 +26,14 @@ struct Args {
     /// e.g. `--local "C:\\Users\\megu\\equicord\\dist\\injector.js"`
     #[clap(short, long)]
     pub local: Option<String>,
+
+    /// Build Equicord with userplugins from the given directory.
+    /// The launcher will clone the Equicord repo, copy your userplugins in,
+    /// and build a custom bundle automatically.
+    ///
+    /// e.g. `--custom "C:\\Users\\megu\\my-userplugins"`
+    #[clap(short, long)]
+    pub custom: Option<String>,
 
     /// Optional launch arguments to pass to the Discord executable
     ///
@@ -58,15 +70,53 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
 
     let assets_dir = constants::asset_cache_dir().unwrap();
 
-    // If `--local` is provided, use a local build. Otherwise, download assets.
+    // Always check for OpenAsar updates regardless of mode
+    let _ = updater::download_open_asar().await;
+
+    // Determine mod entrypoint based on mode: --local, --custom, or default (download)
     let mod_entrypoint = if let Some(local_path) = args.local {
+        // --local: Use a pre-built local mod entrypoint directly
         local_path
+    } else if let Some(custom_dir) = args.custom {
+        // --custom: Build Equicord with userplugins from the given directory
+        match builder::run_custom_build(&custom_dir) {
+            Ok(()) => {
+                println!("[Equicord Launcher] Custom build succeeded.");
+            }
+            Err(e) => {
+                eprintln!("[Equicord Launcher] Custom build failed: {e}");
+
+                #[cfg(not(windows))]
+                {
+                    use dialog::DialogBox as _;
+                    let _ = dialog::Message::new(format!(
+                        "Custom build failed:\n{e}\n\nFalling back to cached build if available."
+                    ))
+                    .title("Equicord Build Error")
+                    .show();
+                }
+
+                #[cfg(windows)]
+                messagebox(
+                    "Equicord Build Error",
+                    &format!(
+                        "Custom build failed:\n{e}\n\nFalling back to cached build if available."
+                    ),
+                    MessageBoxIcon::Warning,
+                );
+            }
+        }
+
+        // Use the built patcher.js from the cache (same location as downloaded assets)
+        assets_dir
+            .join(constants::MOD_ENTRYPOINT)
+            .to_string_lossy()
+            .replace("\\", "\\\\")
+            .to_string()
     } else {
+        // Default: Download pre-built assets from GitHub
         // We can usually attempt to run Discord even if the downloads fail...
-        // TODO: Make this more robust. Maybe specific error reasons so we can determine if it's safe to continue.
-        // TODO: Make this more robust. Maybe specific error reasons so we can determine if it's safe to continue.
         let _ = updater::download_assets().await;
-        let _ = updater::download_open_asar().await;
 
         assets_dir
             .join(constants::MOD_ENTRYPOINT)
@@ -114,8 +164,8 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
                     // Copy OpenAsar to app.asar
                     // We only do this if we successfully created a backup or if a backup already exists
                     if backup_asar.exists() {
-                         println!("[Equicord Launcher] Patching OpenAsar...");
-                         let _ = std::fs::copy(&open_asar_source, &app_asar);
+                        println!("[Equicord Launcher] Patching OpenAsar...");
+                        let _ = std::fs::copy(&open_asar_source, &app_asar);
                     }
                 }
             }
@@ -142,5 +192,3 @@ pub async fn launch(instance_id: &str, branch: DiscordBranch, display_name: &str
         }
     }
 }
-
-
