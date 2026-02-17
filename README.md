@@ -17,16 +17,19 @@ sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/lat
 ```
 
 ## PTB
+
 ```
 sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/install.sh)" -- ptb
 ```
 
 ## Canary
+
 ```
 sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/install.sh)" -- canary
 ```
 
 ## Uninstalling
+
 ```
 sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/install.sh)" -- --uninstall <branch>
 ```
@@ -34,7 +37,6 @@ sh -c "$(curl -fsSL https://github.com/Johnnycyan/Equicord-Launcher/releases/lat
 # MacOS
 
 Working on it...
-
 
 # Commandline Arguments
 
@@ -44,6 +46,14 @@ You can pass the `--local` flag with a path to the entrypoint. For example:
 
 ```
 equicord-stable --local $HOME/workspace/equicord/patcher.js
+```
+
+## Want to use custom userplugins without maintaining your own local build?
+
+You can pass the `--custom` flag with a path to the directory containing your userplugins. For example:
+
+```
+equicord-stable --custom $HOME/workspace/my-userplugins
 ```
 
 ## Passing arguments through to discord?
