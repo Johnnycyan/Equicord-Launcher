@@ -4,7 +4,9 @@ Quickly and conveniently launch Equicord.
 
 # Windows
 
-Download and run [the latest installer](https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/EquicordInstaller.exe) and pick the branches of Discord you want.
+- Uninstall Equicord / Vencord
+- Download and run [the latest installer](https://github.com/Johnnycyan/Equicord-Launcher/releases/latest/download/EquicordInstaller.exe) and pick the branches of Discord you want.
+- You will now have a Start Menu entry named "Equicord". Use that to launch Discord from now on.
 
 # Linux
 
